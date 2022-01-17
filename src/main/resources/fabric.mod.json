@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "skypixel",
+  "version": "${version}",
+  "name": "Skypixel",
+  "description": "",
+  "authors": [
+    "KonaeAkira"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/skypixel/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.github.konaeakira.skypixel.Skypixel"
+    ]
+  },
+  "mixins": [
+    "skypixel.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}
