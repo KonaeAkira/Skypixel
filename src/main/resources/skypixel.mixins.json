@@ -3,10 +3,13 @@
   "minVersion": "0.8",
   "package": "com.github.konaeakira.skypixel.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+    "HandledScreenMixin"
+  ],
   "client": [
+    "ChatHudListenerMixin",
     "InGameHudMixin",
-    "ChatHudListenerMixin"
+    "HandledScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
