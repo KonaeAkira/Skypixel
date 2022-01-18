@@ -31,14 +31,16 @@ public class ChatHudListenerMixin {
 
     @Inject(method = "onChatMessage", at = @At("HEAD"), cancellable = true)
     public void onMessage(MessageType messageType, Text message, UUID senderUuid, CallbackInfo ci) {
-        String first = message.getSiblings().get(0).getString().trim();
-        for (String filter : filters) {
-            if (first.equals(filter)) {
-                Text title = message.getSiblings().get(0);
-                Text description = message.getSiblings().get(1);
-                client.getToastManager().add(new ToastBuilder(title, description));
-                ci.cancel();
-                break;
+        if (message.getSiblings().size() > 1) {
+            String first = message.getSiblings().get(0).getString().trim();
+            for (String filter : filters) {
+                if (first.equals(filter)) {
+                    Text title = message.getSiblings().get(0);
+                    Text description = message.getSiblings().get(1);
+                    client.getToastManager().add(new ToastBuilder(title, description));
+                    ci.cancel();
+                    break;
+                }
             }
         }
         System.out.println(message);
