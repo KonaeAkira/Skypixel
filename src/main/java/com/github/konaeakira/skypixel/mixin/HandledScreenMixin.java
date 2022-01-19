@@ -1,16 +1,23 @@
 package com.github.konaeakira.skypixel.mixin;
 
 import com.github.konaeakira.skypixel.QuickNavButton;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtInt;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Optional;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin extends Screen {
@@ -40,7 +47,11 @@ public abstract class HandledScreenMixin extends Screen {
         super.addButton(new QuickNavButton(right_x - 29 * 3, top_y, QuickNavButton.Type.TOP, title.contains("Enchant Item"), "/et", new ItemStack(Items.ENCHANTING_TABLE)));
 
         super.addButton(new QuickNavButton(right_x - 29 * 1, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Storage"), "/storage", new ItemStack(Items.ENDER_CHEST)));
-        super.addButton(new QuickNavButton(right_x - 29 * 2, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Wardrobe"), "/wd", new ItemStack(Items.LEATHER_CHESTPLATE)));
+        try {
+            super.addButton(new QuickNavButton(right_x - 29 * 2, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Wardrobe"), "/wd", ItemStack.fromNbt(StringNbtReader.parse("{id:\"minecraft:leather_chestplate\", Count:1, tag:{display:{color:8991416}}}"))));
+        } catch (CommandSyntaxException e) {
+            e.printStackTrace();
+        }
         super.addButton(new QuickNavButton(right_x - 29 * 3, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Pets"), "/pets", new ItemStack(Items.BONE)));
     }
     private void dummy() {}
