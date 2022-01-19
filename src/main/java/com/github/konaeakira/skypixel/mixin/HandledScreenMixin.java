@@ -47,7 +47,7 @@ public abstract class HandledScreenMixin extends Screen {
         super.addButton(new QuickNavButton(right_x - 29 * 3, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Enchant Item"), "/etable", new ItemStack(Items.ENCHANTING_TABLE)));
 
         super.addButton(new QuickNavButton(left_x + 29 * 0, bottom_y, QuickNavButton.Type.BOTTOM, false, "/warp hub", new ItemStack(Items.COMPASS)));
-        super.addButton(new QuickNavButton(left_x + 29 * 1, bottom_y, QuickNavButton.Type.BOTTOM, false, "/is", new ItemStack(Items.GRASS_BLOCK)));
+        super.addButton(new QuickNavButton(left_x + 29 * 1, bottom_y, QuickNavButton.Type.BOTTOM, false, "/warp dungeon_hub", new ItemStack(Items.NETHER_STAR)));
 
         super.addButton(new QuickNavButton(right_x - 29 * 1, top_y, QuickNavButton.Type.TOP, title.contains("Storage"), "/storage", new ItemStack(Items.ENDER_CHEST)));
         try {
