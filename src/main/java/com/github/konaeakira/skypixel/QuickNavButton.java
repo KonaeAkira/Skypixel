@@ -57,16 +57,25 @@ public class QuickNavButton extends ClickableWidget {
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         CLIENT.getTextureManager().bindTexture(BUTTON_TEXTURE);
         RenderSystem.disableDepthTest();
+        // render button background
         if (!this.toggled) {
             if (this.type == Type.BOTTOM)
                 this.drawTexture(matrices, this.x, this.y + 4, this.u, this.v + 4, this.width, this.height - 4);
             else
                 this.drawTexture(matrices, this.x, this.y, this.u, this.v, this.width, this.height - 4);
         } else this.drawTexture(matrices, this.x, this.y, this.u, this.v, this.width, this.height);
-        if (this.type == Type.BOTTOM)
-            CLIENT.getItemRenderer().renderInGui(this.icon,this.x + 6, this.y + 6);
-        else
-            CLIENT.getItemRenderer().renderInGui(this.icon,this.x + 6, this.y + 9);
+        // render button icon
+        if (!this.toggled) {
+            if (this.type == Type.BOTTOM)
+                CLIENT.getItemRenderer().renderInGui(this.icon,this.x + 6, this.y + 6);
+            else
+                CLIENT.getItemRenderer().renderInGui(this.icon,this.x + 6, this.y + 9);
+        } else {
+            if (this.type == Type.BOTTOM)
+                CLIENT.getItemRenderer().renderInGui(this.icon,this.x + 6, this.y + 9);
+            else
+                CLIENT.getItemRenderer().renderInGui(this.icon,this.x + 6, this.y + 6);
+        }
         RenderSystem.enableDepthTest();
     }
 }
