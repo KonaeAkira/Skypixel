@@ -1,5 +1,6 @@
 package com.github.konaeakira.skypixel.mixin;
 
+import com.github.konaeakira.skypixel.DungeonMap;
 import com.github.konaeakira.skypixel.Skypixel;
 import com.github.konaeakira.skypixel.StatusBars;
 import net.minecraft.client.MinecraftClient;
@@ -62,6 +63,7 @@ public class InGameHudMixin {
     @Inject(method = "renderStatusBars(Lnet/minecraft/client/util/math/MatrixStack;)V", at = @At("HEAD"), cancellable = true)
     private void renderStatusBars(MatrixStack matrices, CallbackInfo ci) {
         StatusBars.render(matrices);
+        DungeonMap.render(matrices);
         ci.cancel();
     }
 }
