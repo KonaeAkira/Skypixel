@@ -42,17 +42,20 @@ public abstract class HandledScreenMixin extends Screen {
         super.addButton(new QuickNavButton(left_x + 29 * 0, top_y, QuickNavButton.Type.TOP, title.contains("Your Skills"), "/skills", new ItemStack(Items.DIAMOND_SWORD)));
         super.addButton(new QuickNavButton(left_x + 29 * 1, top_y, QuickNavButton.Type.TOP, title.contains("Collection"), "/collection", new ItemStack(Items.PAINTING)));
 
-        super.addButton(new QuickNavButton(right_x - 29 * 1, top_y, QuickNavButton.Type.TOP, title.contains("Craft Item"), "/craft", new ItemStack(Items.CRAFTING_TABLE)));
-        super.addButton(new QuickNavButton(right_x - 29 * 2, top_y, QuickNavButton.Type.TOP, title.contains("Anvil"), "/av", new ItemStack(Items.ANVIL)));
-        super.addButton(new QuickNavButton(right_x - 29 * 3, top_y, QuickNavButton.Type.TOP, title.contains("Enchant Item"), "/et", new ItemStack(Items.ENCHANTING_TABLE)));
+        super.addButton(new QuickNavButton(right_x - 29 * 1, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Craft Item"), "/craft", new ItemStack(Items.CRAFTING_TABLE)));
+        super.addButton(new QuickNavButton(right_x - 29 * 2, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Anvil"), "/anvil", new ItemStack(Items.ANVIL)));
+        super.addButton(new QuickNavButton(right_x - 29 * 3, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Enchant Item"), "/etable", new ItemStack(Items.ENCHANTING_TABLE)));
 
-        super.addButton(new QuickNavButton(right_x - 29 * 1, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Storage"), "/storage", new ItemStack(Items.ENDER_CHEST)));
+        super.addButton(new QuickNavButton(left_x + 29 * 0, bottom_y, QuickNavButton.Type.BOTTOM, false, "/warp hub", new ItemStack(Items.COMPASS)));
+        super.addButton(new QuickNavButton(left_x + 29 * 1, bottom_y, QuickNavButton.Type.BOTTOM, false, "/is", new ItemStack(Items.GRASS_BLOCK)));
+
+        super.addButton(new QuickNavButton(right_x - 29 * 1, top_y, QuickNavButton.Type.TOP, title.contains("Storage"), "/storage", new ItemStack(Items.ENDER_CHEST)));
         try {
-            super.addButton(new QuickNavButton(right_x - 29 * 2, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Wardrobe"), "/wd", ItemStack.fromNbt(StringNbtReader.parse("{id:\"minecraft:leather_chestplate\", Count:1, tag:{display:{color:8991416}}}"))));
+            super.addButton(new QuickNavButton(right_x - 29 * 2, top_y, QuickNavButton.Type.TOP, title.contains("Wardrobe"), "/wardrobe", ItemStack.fromNbt(StringNbtReader.parse("{id:\"minecraft:leather_chestplate\", Count:1, tag:{display:{color:8991416}}}"))));
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
-        super.addButton(new QuickNavButton(right_x - 29 * 3, bottom_y, QuickNavButton.Type.BOTTOM, title.contains("Pets"), "/pets", new ItemStack(Items.BONE)));
+        super.addButton(new QuickNavButton(right_x - 29 * 3, top_y, QuickNavButton.Type.TOP, title.contains("Pets"), "/pets", new ItemStack(Items.BONE)));
     }
     private void dummy() {}
 }
