@@ -1,4 +1,4 @@
-package com.github.konaeakira.skypixel.utils;
+package com.github.konaeakira.skypixel.itemlist;
 
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -6,7 +6,7 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.Map;
 
-public class ItemFixer {
+public class ItemFixerUpper {
     private final static Map<String, String> MAPPING = Map.ofEntries(
             Map.entry("minecraft:golden_rail", "minecraft:powered_rail"),
             Map.entry("minecraft:lit_pumpkin", "minecraft:jack_o_lantern"),

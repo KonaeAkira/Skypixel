@@ -1,5 +1,6 @@
 package com.github.konaeakira.skypixel;
 
+import com.github.konaeakira.skypixel.itemlist.ItemList;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
