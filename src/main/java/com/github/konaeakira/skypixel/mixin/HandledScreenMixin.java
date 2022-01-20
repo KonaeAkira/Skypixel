@@ -1,6 +1,5 @@
 package com.github.konaeakira.skypixel.mixin;
 
-import com.github.konaeakira.skypixel.itemlist.ItemList;
 import com.github.konaeakira.skypixel.itemlist.ItemListWidget;
 import com.github.konaeakira.skypixel.quicknav.QuickNav;
 import com.github.konaeakira.skypixel.quicknav.QuickNavButton;
@@ -43,6 +42,6 @@ public abstract class HandledScreenMixin extends Screen {
 
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At("TAIL"))
     private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        ItemList.getInstance().render(matrices, mouseX, mouseY, delta);
+        ItemListWidget.getInstance().render(matrices, mouseX, mouseY, delta);
     }
 }

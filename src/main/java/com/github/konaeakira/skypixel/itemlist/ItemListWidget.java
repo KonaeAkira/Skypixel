@@ -14,6 +14,8 @@ import net.minecraft.text.Text;
 import java.util.List;
 
 public class ItemListWidget extends AbstractParentElement implements Drawable {
+    protected static ItemListWidget instance;
+
     private final HandledScreen screen;
     private final MinecraftClient client;
     private final List<Element> children = Lists.newArrayList();
@@ -27,7 +29,7 @@ public class ItemListWidget extends AbstractParentElement implements Drawable {
     private final double maxScroll;
 
     public ItemListWidget(HandledScreen screen) {
-        ItemList.instance = this;
+        instance = this;
         this.screen = screen;
         this.client = MinecraftClient.getInstance();
         int scaledWidth = this.client.getWindow().getScaledWidth();
@@ -37,7 +39,7 @@ public class ItemListWidget extends AbstractParentElement implements Drawable {
         this.gridX = scaledWidth - this.cols * 16;
         this.gridY = 0;
         this.scroll = 0;
-        this.maxScroll = ItemList.items.size() / this.cols - this.rows + 1;
+        this.maxScroll = ItemRegistry.items.size() / this.cols - this.rows + 1;
     }
 
     @Override
@@ -47,18 +49,18 @@ public class ItemListWidget extends AbstractParentElement implements Drawable {
         for (int i = 0; i < rows; ++i)
             for (int j = 0; j < cols; ++j) {
                 int index = (i + (int)scroll) * cols + j;
-                if (index < ItemList.items.size()) {
+                if (index < ItemRegistry.items.size()) {
                     int x = gridX + j * 16;
                     int y = gridY + i * 16;
-                    itemRenderer.renderInGui(ItemList.items.get(index), x, y);
+                    itemRenderer.renderInGui(ItemRegistry.items.get(index), x, y);
                 }
             }
         if (this.isMouseOverList(mouseX, mouseY)) {
             int i = (mouseY - gridY) / 16;
             int j = (mouseX - gridX) / 16;
             int index = (i + (int)scroll) * cols + j;
-            if (index < ItemList.items.size()) {
-                List<Text> tooltip = this.screen.getTooltipFromItem(ItemList.items.get(index));
+            if (index < ItemRegistry.items.size()) {
+                List<Text> tooltip = this.screen.getTooltipFromItem(ItemRegistry.items.get(index));
                 this.screen.renderTooltip(matrices, tooltip, mouseX, mouseY);
             }
         }
@@ -88,5 +90,9 @@ public class ItemListWidget extends AbstractParentElement implements Drawable {
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return isMouseOverList(mouseX, mouseY);
+    }
+
+    public static ItemListWidget getInstance() {
+        return instance;
     }
 }

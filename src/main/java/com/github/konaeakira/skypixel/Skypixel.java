@@ -1,6 +1,6 @@
 package com.github.konaeakira.skypixel;
 
-import com.github.konaeakira.skypixel.itemlist.ItemList;
+import com.github.konaeakira.skypixel.itemlist.ItemRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +16,7 @@ public class Skypixel implements ClientModInitializer {
         if (!Files.isDirectory(Paths.get("config/skypixel"))) {
             (new File("config/skypixel")).mkdir();
         }
-        ItemList.init();
+        ItemRegistry.init();
     }
 
     public enum Attribute {
