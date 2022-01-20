@@ -1,14 +1,13 @@
 package com.github.konaeakira.skypixel.mixin;
 
 import com.github.konaeakira.skypixel.QuickNavButton;
+import com.github.konaeakira.skypixel.ItemList;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +15,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Optional;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin extends Screen {
@@ -57,5 +54,9 @@ public abstract class HandledScreenMixin extends Screen {
         }
         super.addButton(new QuickNavButton(right_x - 29 * 3, top_y, QuickNavButton.Type.TOP, title.contains("Pets"), "/pets", new ItemStack(Items.BONE)));
     }
-    private void dummy() {}
+
+    @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", at = @At("TAIL"))
+    private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        ItemList.render(matrices, mouseX, mouseY, (HandledScreen)(Object)this);
+    }
 }

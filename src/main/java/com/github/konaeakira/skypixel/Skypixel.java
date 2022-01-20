@@ -4,11 +4,18 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 @Environment(EnvType.CLIENT)
 public class Skypixel implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-
+        if (!Files.isDirectory(Paths.get("config/skypixel"))) {
+            (new File("config/skypixel")).mkdir();
+        }
+        ItemList.init();
     }
 
     public enum Attribute {
