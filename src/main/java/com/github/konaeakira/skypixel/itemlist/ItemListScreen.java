@@ -17,7 +17,11 @@ import java.util.List;
 
 @Environment(value= EnvType.CLIENT)
 public class ItemListScreen extends Screen implements Drawable {
-    protected static ItemListScreen instance;
+    protected static ItemListScreen instance = null;
+    private static final List<Entry> entries = new ArrayList<>();
+    private static String searchString = "";
+    private static double scroll = 0.0;
+
     public static ItemListScreen getInstance() {
         return instance;
     }
@@ -27,16 +31,11 @@ public class ItemListScreen extends Screen implements Drawable {
     private final int rows;
     private final int cols;
 
-    private double scroll;
-    private final double maxScroll;
-
-    private final List<Entry> entries = new ArrayList<>();
+    private double maxScroll;
 
     public ItemListScreen(HandledScreen parent) {
         super(Text.of("Item List"));
         init(MinecraftClient.getInstance(), parent.width, parent.height);
-        instance = this;
-        setSearch("");
 
         this.cols = (this.width - 200) / 2 / 16;
         int searchWidth = this.cols * 16 - 4;
@@ -47,15 +46,17 @@ public class ItemListScreen extends Screen implements Drawable {
         int searchX = this.gridX + 2;
         int searchY = 4;
 
-        this.scroll = 0;
-        this.maxScroll = this.entries.size() / this.cols - this.rows + 1;
-
         TextFieldWidget search = new TextFieldWidget(this.textRenderer, searchX, searchY, searchWidth, searchHeight, Text.of("Search"));
+        search.setText(searchString);
         search.setChangedListener(this::setSearch);
         addButton(search);
+
+        if (instance == null) setSearch("");
+        instance = this;
     }
 
     private void setSearch(String search) {
+        searchString = search;
         entries.clear();
         search = search.toLowerCase();
         for (Entry entry : ItemRegistry.registry) {
@@ -64,6 +65,8 @@ public class ItemListScreen extends Screen implements Drawable {
             if (name.contains(search) || lore.contains(search))
                 entries.add(entry);
         }
+        this.maxScroll = Math.max(0, entries.size() / this.cols - this.rows + 1);
+        scroll = Math.min(scroll, this.maxScroll);
     }
 
     @Override
@@ -82,15 +85,15 @@ public class ItemListScreen extends Screen implements Drawable {
         for (int i = 0; i < rows; ++i)
             for (int j = 0; j < cols; ++j) {
                 int index = (i + (int)scroll) * cols + j;
-                if (index < this.entries.size()) {
+                if (index < entries.size()) {
                     int x = gridX + j * 16;
                     int y = gridY + i * 16;
-                    itemRenderer.renderInGui(this.entries.get(index).itemStack, x, y);
+                    itemRenderer.renderInGui(entries.get(index).itemStack, x, y);
                 }
             }
         // item tooltip
         if (mouseOverIndex != -1) {
-            List<Text> tooltip = getTooltipFromItem(this.entries.get(mouseOverIndex).itemStack);
+            List<Text> tooltip = getTooltipFromItem(entries.get(mouseOverIndex).itemStack);
             renderTooltip(matrices, tooltip, mouseX, mouseY);
         }
         RenderSystem.enableDepthTest();
@@ -104,8 +107,8 @@ public class ItemListScreen extends Screen implements Drawable {
         if (isMouseOverList(mouseX, mouseY)) {
             int i = (int)(mouseY - this.gridY) / 16;
             int j = (int)(mouseX - this.gridX) / 16;
-            int index = (i + (int)this.scroll) * this.cols + j;
-            if (index < this.entries.size()) return index;
+            int index = (i + (int)scroll) * this.cols + j;
+            if (index < entries.size()) return index;
         }
         return -1;
     }
