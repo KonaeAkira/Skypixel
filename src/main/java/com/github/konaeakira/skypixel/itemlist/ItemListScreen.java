@@ -33,25 +33,31 @@ public class ItemListScreen extends Screen implements Drawable {
 
     private double maxScroll;
 
+    private final TextFieldWidget search;
+
     public ItemListScreen(HandledScreen parent) {
         super(Text.of("Item List"));
         init(MinecraftClient.getInstance(), parent.width, parent.height);
 
+        int marginTop = 40;
+        int marginRight = 8;
         this.cols = (this.width - 200) / 2 / 16;
-        int searchWidth = this.cols * 16 - 4;
-        int searchHeight = 16;
-        this.rows = (this.height - searchHeight - 4) / 16;
+        this.rows = (this.height - marginTop) / 16;
         this.gridX = this.width - this.cols * 16 - 2;
-        this.gridY = (searchHeight + 4 + this.height - this.rows * 16) / 2;
-        int searchX = this.gridX + 2;
-        int searchY = 4;
+        this.gridY = marginTop;
 
-        TextFieldWidget search = new TextFieldWidget(this.textRenderer, searchX, searchY, searchWidth, searchHeight, Text.of("Search"));
-        search.setText(searchString);
-        search.setChangedListener(this::setSearch);
+        this.maxScroll = Math.max(0, entries.size() / this.cols - this.rows + 1);
+
+        int searchX = this.gridX + 1;
+        int searchY = 18;
+        int searchWidth = this.cols * 16 - 2;
+        int searchHeight = 16;
+        this.search = new TextFieldWidget(this.textRenderer, searchX, searchY, searchWidth, searchHeight, Text.of("Search"));
+        this.search.setText(searchString);
+        this.search.setChangedListener(this::setSearch);
         addButton(search);
 
-        if (instance == null) setSearch("");
+        if (instance == null) setSearch(searchString);
         instance = this;
     }
 
@@ -74,12 +80,14 @@ public class ItemListScreen extends Screen implements Drawable {
         super.render(matrices, mouseX, mouseY, delta);
         ItemRenderer itemRenderer = client.getItemRenderer();
         RenderSystem.disableDepthTest();
+        // search box title
+        client.textRenderer.drawWithShadow(matrices, "Search", this.gridX, 6, 0xff9e9e9e);
         // slot hover
         int mouseOverIndex = getMouseOverIndex(mouseX, mouseY);
         if (mouseOverIndex != -1) {
             int x = this.gridX + mouseOverIndex % this.cols * 16;
             int y = this.gridY + (mouseOverIndex / this.cols - (int)scroll) * 16;
-            fill(matrices, x, y, x + 16, y + 16, 0x20FFFFFF);
+            fill(matrices, x, y, x + 16, y + 16, 0x20ffffff);
         }
         // item list
         for (int i = 0; i < rows; ++i)
@@ -127,16 +135,15 @@ public class ItemListScreen extends Screen implements Drawable {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (super.keyPressed(keyCode, scanCode, modifiers)) return true;
-        if (this.getFocused() instanceof TextFieldWidget && ((TextFieldWidget) this.getFocused()).isFocused() && keyCode != 256) return true;
-        return false;
+        return this.getFocused() instanceof TextFieldWidget && ((TextFieldWidget) this.getFocused()).isFocused() && keyCode != 256;
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (super.mouseClicked(mouseX, mouseY, button)) return true;
         int index = getMouseOverIndex(mouseX, mouseY);
-        if (index != -1 && this.entries.get(index).clickCommand != null) {
-            this.client.player.sendChatMessage(this.entries.get(index).clickCommand);
+        if (index != -1 && entries.get(index).clickCommand != null) {
+            this.client.player.sendChatMessage(entries.get(index).clickCommand);
             return true;
         }
         return false;

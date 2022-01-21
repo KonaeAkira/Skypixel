@@ -43,6 +43,12 @@ public final class Entry implements Comparable<Entry> {
         NbtCompound tag = new NbtCompound();
         root.put("tag", tag);
 
+        if (internalName.contains("ENCHANTED")) {
+            NbtList enchantments = new NbtList();
+            enchantments.add(new NbtCompound());
+            tag.put("Enchantments", enchantments);
+        }
+
         NbtCompound display = new NbtCompound();
         tag.put("display", display);
 
