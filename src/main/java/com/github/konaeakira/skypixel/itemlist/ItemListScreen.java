@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class ItemListScreen extends Screen implements Drawable {
     private double scroll;
     private final double maxScroll;
 
-    private final List<ItemStack> itemList = new ArrayList<>();
+    private final List<Entry> entries = new ArrayList<>();
 
     public ItemListScreen(HandledScreen parent) {
         super(Text.of("Item List"));
@@ -49,7 +48,7 @@ public class ItemListScreen extends Screen implements Drawable {
         int searchY = 4;
 
         this.scroll = 0;
-        this.maxScroll = this.itemList.size() / this.cols - this.rows + 1;
+        this.maxScroll = this.entries.size() / this.cols - this.rows + 1;
 
         TextFieldWidget search = new TextFieldWidget(this.textRenderer, searchX, searchY, searchWidth, searchHeight, Text.of("Search"));
         search.setChangedListener(this::setSearch);
@@ -57,13 +56,13 @@ public class ItemListScreen extends Screen implements Drawable {
     }
 
     private void setSearch(String search) {
-        itemList.clear();
+        entries.clear();
         search = search.toLowerCase();
-        for (ItemStack itemStack : ItemRegistry.registry.values()) {
-            String name = itemStack.getName().toString().toLowerCase();
-            String lore = itemStack.getTag().toString().toLowerCase();
+        for (Entry entry : ItemRegistry.registry) {
+            String name = entry.itemStack.getName().toString().toLowerCase();
+            String lore = entry.itemStack.getTag().toString().toLowerCase();
             if (name.contains(search) || lore.contains(search))
-                itemList.add(itemStack);
+                entries.add(entry);
         }
     }
 
@@ -76,27 +75,33 @@ public class ItemListScreen extends Screen implements Drawable {
         for (int i = 0; i < rows; ++i)
             for (int j = 0; j < cols; ++j) {
                 int index = (i + (int)scroll) * cols + j;
-                if (index < this.itemList.size()) {
+                if (index < this.entries.size()) {
                     int x = gridX + j * 16;
                     int y = gridY + i * 16;
-                    itemRenderer.renderInGui(this.itemList.get(index), x, y);
+                    itemRenderer.renderInGui(this.entries.get(index).itemStack, x, y);
                 }
             }
         // tooltip
-        if (this.isMouseOverList(mouseX, mouseY)) {
-            int i = (mouseY - gridY) / 16;
-            int j = (mouseX - gridX) / 16;
-            int index = (i + (int)scroll) * cols + j;
-            if (index < this.itemList.size()) {
-                List<Text> tooltip = getTooltipFromItem(this.itemList.get(index));
-                renderTooltip(matrices, tooltip, mouseX, mouseY);
-            }
+        int index = getMouseOverIndex(mouseX, mouseY);
+        if (index != -1) {
+            List<Text> tooltip = getTooltipFromItem(this.entries.get(index).itemStack);
+            renderTooltip(matrices, tooltip, mouseX, mouseY);
         }
         RenderSystem.enableDepthTest();
     }
 
-    public boolean isMouseOverList(double mouseX, double mouseY) {
+    private boolean isMouseOverList(double mouseX, double mouseY) {
         return gridX <= mouseX && mouseX < gridX + cols * 16 && gridY <= mouseY && mouseY < gridY + rows * 16;
+    }
+
+    private int getMouseOverIndex(double mouseX, double mouseY) {
+        if (isMouseOverList(mouseX, mouseY)) {
+            int i = (int)(mouseY - this.gridY) / 16;
+            int j = (int)(mouseX - this.gridX) / 16;
+            int index = (i + (int)this.scroll) * this.cols + j;
+            if (index < this.entries.size()) return index;
+        }
+        return -1;
     }
 
     @Override
@@ -114,6 +119,17 @@ public class ItemListScreen extends Screen implements Drawable {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (super.keyPressed(keyCode, scanCode, modifiers)) return true;
         if (this.getFocused() instanceof TextFieldWidget && ((TextFieldWidget) this.getFocused()).isFocused() && keyCode != 256) return true;
+        return false;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        int index = getMouseOverIndex(mouseX, mouseY);
+        if (index != -1 && this.entries.get(index).clickCommand != null) {
+            this.client.player.sendChatMessage(this.entries.get(index).clickCommand);
+            return true;
+        }
         return false;
     }
 }
