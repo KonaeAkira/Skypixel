@@ -69,8 +69,15 @@ public class ItemListScreen extends Screen implements Drawable {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        RenderSystem.disableDepthTest();
         ItemRenderer itemRenderer = client.getItemRenderer();
+        RenderSystem.disableDepthTest();
+        // slot hover
+        int mouseOverIndex = getMouseOverIndex(mouseX, mouseY);
+        if (mouseOverIndex != -1) {
+            int x = this.gridX + mouseOverIndex % this.cols * 16;
+            int y = this.gridY + (mouseOverIndex / this.cols - (int)scroll) * 16;
+            fill(matrices, x, y, x + 16, y + 16, 0x20FFFFFF);
+        }
         // item list
         for (int i = 0; i < rows; ++i)
             for (int j = 0; j < cols; ++j) {
@@ -81,10 +88,9 @@ public class ItemListScreen extends Screen implements Drawable {
                     itemRenderer.renderInGui(this.entries.get(index).itemStack, x, y);
                 }
             }
-        // tooltip
-        int index = getMouseOverIndex(mouseX, mouseY);
-        if (index != -1) {
-            List<Text> tooltip = getTooltipFromItem(this.entries.get(index).itemStack);
+        // item tooltip
+        if (mouseOverIndex != -1) {
+            List<Text> tooltip = getTooltipFromItem(this.entries.get(mouseOverIndex).itemStack);
             renderTooltip(matrices, tooltip, mouseX, mouseY);
         }
         RenderSystem.enableDepthTest();
