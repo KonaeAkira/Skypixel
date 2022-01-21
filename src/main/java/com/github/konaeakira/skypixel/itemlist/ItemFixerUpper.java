@@ -122,6 +122,7 @@ public class ItemFixerUpper {
         if (id.equals("minecraft:dye")) return DYE_COLORS[damage];
         if (id.equals("minecraft:stonebrick")) return STONE_BRICK_VARIANTS[damage];
         if (id.equals("minecraft:spawn_egg")) return SPAWN_EGG_VARIANTS.getOrDefault(damage, "minecraft:ghast_spawn_egg");
+        if (id.equals("minecraft:banner")) return "minecraft:" + BLOCK_COLORS[15 - damage] + "banner";
         id = MAPPING.getOrDefault(id, id);
         if (Registry.ITEM.get(new Identifier(id)).equals(Items.AIR)) {
             String shortId = id.split(":")[1];

@@ -42,11 +42,6 @@ public class ItemRegistry {
             e.printStackTrace();
         }
         importItemFiles();
-        reorderItemList();
-    }
-
-    public static void reorderItemList() {
-
     }
 
     private static void updateItemRepo() {
