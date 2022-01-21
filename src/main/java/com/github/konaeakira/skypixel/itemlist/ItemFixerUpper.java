@@ -31,6 +31,8 @@ public class ItemFixerUpper {
             Map.entry("minecraft:fish", "minecraft:cod"),
             Map.entry("minecraft:cooked_fish", "minecraft:cooked_cod"),
             Map.entry("minecraft:red_flower", "minecraft:poppy"),
+            Map.entry("minecraft:tallgrass", "minecraft:grass"),
+            Map.entry("minecraft:stone_slab2", "minecraft:red_sandstone_slab"),
             Map.entry("minecraft:waterlily", "minecraft:lily_pad")
     );
 
@@ -88,6 +90,15 @@ public class ItemFixerUpper {
             "minecraft:chiseled_stone_bricks"
     };
 
+    private final static String[] DOUBLE_PLANT_VARIANTS = {
+            "minecraft:sunflower",
+            "minecraft:lilac",
+            "minecraft:tall_grass",
+            "minecraft:large_fern",
+            "minecraft:rose_bush",
+            "minecraft:peony"
+    };
+
     private final static Map<Integer, String> SPAWN_EGG_VARIANTS = Map.ofEntries(
             Map.entry(50, "minecraft:creeper_spawn_egg"),
             Map.entry(51, "minecraft:skeleton_spawn_egg"),
@@ -120,7 +131,10 @@ public class ItemFixerUpper {
 
     public static String convert(String id, int damage) {
         if (id.equals("minecraft:dye")) return DYE_COLORS[damage];
+        if (id.equals("minecraft:log2")) return "minecraft:" + TREE_VARIANTS[damage + 4] + "log";
+        if (id.equals("minecraft:leaves2")) return "minecraft:" + TREE_VARIANTS[damage + 4] + "leaves";
         if (id.equals("minecraft:stonebrick")) return STONE_BRICK_VARIANTS[damage];
+        if (id.equals("minecraft:double_plant")) return DOUBLE_PLANT_VARIANTS[damage];
         if (id.equals("minecraft:spawn_egg")) return SPAWN_EGG_VARIANTS.getOrDefault(damage, "minecraft:ghast_spawn_egg");
         if (id.equals("minecraft:banner")) return "minecraft:" + BLOCK_COLORS[15 - damage] + "banner";
         id = MAPPING.getOrDefault(id, id);

@@ -118,7 +118,7 @@ public final class Entry implements Comparable<Entry> {
         JsonArray otherNumsMin = data.get("1").getAsJsonObject().get("otherNums").getAsJsonArray();
         JsonArray otherNumsMax = data.get("100").getAsJsonObject().get("otherNums").getAsJsonArray();
         for (int i = 0; i < otherNumsMin.size(); ++i) {
-            String left = "\\{" + Integer.toString(i) + "\\}";
+            String left = "\\{" + i + "\\}";
             String right = otherNumsMin.get(i).getAsString() + " ➡ " + otherNumsMax.get(i).getAsString();
             list.add(new Pair(left, right));
         }
