@@ -30,7 +30,7 @@ public class ItemRegistry {
 
     private static final JsonParser JSON_PARSER = new JsonParser();
 
-    protected static ArrayList<ItemStack> items = new ArrayList<>();
+    protected static SortedMap<String, ItemStack> registry = new TreeMap<>(new InternalNameComparator());
     private static JsonObject petNums;
 
     // TODO: make async
@@ -41,7 +41,12 @@ public class ItemRegistry {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        readItemFiles();
+        importItemFiles();
+        reorderItemList();
+    }
+
+    public static void reorderItemList() {
+
     }
 
     private static void updateItemRepo() {
@@ -67,7 +72,7 @@ public class ItemRegistry {
         }
     }
 
-    private static void readItemFiles() {
+    private static void importItemFiles() {
         File dir = new File(ITEM_LIST_DIR);
         File[] files = dir.listFiles();
         for (File file : files) {
@@ -132,7 +137,7 @@ public class ItemRegistry {
         if (itemStack.getItem().equals(Items.AIR)) {
             System.err.println("ItemList: cannot register: " + internalName + " (" + id + ")");
         }
-        items.add(itemStack);
+        registry.put(internalName, itemStack);
     }
 
     private static String injectData(String string, List<Pair<String, String>> injectors) {

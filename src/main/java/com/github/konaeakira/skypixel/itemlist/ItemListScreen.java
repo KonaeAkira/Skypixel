@@ -59,7 +59,7 @@ public class ItemListScreen extends Screen implements Drawable {
     private void setSearch(String search) {
         itemList.clear();
         search = search.toLowerCase();
-        for (ItemStack itemStack : ItemRegistry.items) {
+        for (ItemStack itemStack : ItemRegistry.registry.values()) {
             String name = itemStack.getName().toString().toLowerCase();
             String lore = itemStack.getTag().toString().toLowerCase();
             if (name.contains(search) || lore.contains(search))
